@@ -1,11 +1,13 @@
-use std::io::{self, BufRead};
+use std::io::BufRead;
 use std::collections::HashMap;
 
-pub fn prob_2a() {
-    let stdin = io::stdin();
+pub fn prob_2a<I>(buf: I) -> i32
+where
+    I: BufRead
+{
     let mut two_count = 0;
     let mut three_count = 0;
-    for line in stdin.lock().lines() {
+    for line in buf.lines() {
         let mut char_counts = HashMap::new();
         for chr in line.unwrap().chars() {
             match char_counts.get(&chr) {
@@ -36,5 +38,17 @@ pub fn prob_2a() {
             }
         }
     }
-    println!("{}", two_count * three_count);
+    two_count * three_count
+}
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_2a() {
+        let input = b"abcdef\nbababc\nabbcde\nabcccd\naabcdd\nabcdee\nababab\n";
+        assert_eq!(12, prob_2a(&input[..]));
+    }
 }
