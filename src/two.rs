@@ -41,6 +41,13 @@ where
     two_count * three_count
 }
 
+pub fn prob_2b<I>(buf: I) -> String
+where
+    I: BufRead
+{
+    "".to_string()
+}
+
 
 #[cfg(test)]
 mod tests {
@@ -50,5 +57,11 @@ mod tests {
     fn test_2a() {
         let input = b"abcdef\nbababc\nabbcde\nabcccd\naabcdd\nabcdee\nababab\n";
         assert_eq!(12, prob_2a(&input[..]));
+    }
+
+    #[test]
+    fn test_2b() {
+        let input = b"abcde\nfghij\nklmno\npqrst\nfguij\naxcye\nwvxyz\n";
+        assert_eq!("fgij".to_string(), prob_2b(&input[..]));
     }
 }
