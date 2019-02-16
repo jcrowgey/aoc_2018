@@ -45,7 +45,7 @@ pub fn prob_2b<I>(buf: I) -> String
 where
     I: BufRead
 {
-    "".to_string()
+    unimplemented!();
 }
 
 
