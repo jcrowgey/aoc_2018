@@ -45,7 +45,24 @@ pub fn prob_2b<I>(buf: I) -> String
 where
     I: BufRead
 {
-    unimplemented!();
+
+    let mut ids = Vec::<String>::new();
+    let mut answer = String::from("i give up");
+    'outer: for x in buf.lines() {
+        let x = x.unwrap();
+        for y in ids.iter() {
+            let sames: Vec<(char, char)> = x.chars()
+                                            .zip(y.chars())
+                                            .filter(|p| p.0 == p.1)
+                                            .collect();
+            if sames.len() == (x.len() - 1) {
+                answer = sames.iter().map(|x| x.0).collect();
+                break 'outer
+            }
+        }
+        ids.push(x.clone());
+    }
+    answer
 }
 
 
