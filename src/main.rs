@@ -17,6 +17,7 @@ fn main() {
             "2a" => println!("{}", two::prob_2a(buf)),
             "2b" => println!("{}", two::prob_2b(buf)),
             "3a" => println!("{}", three::prob_3a(buf)),
+            "3b" => println!("{}", three::prob_3b(buf)),
             _ => println!("idk that"),
         }
     }

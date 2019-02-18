@@ -72,23 +72,31 @@ where
             }
         }
     }
-    let mut two_or_more = 0;
-    for count in use_counts.values() {
-        if count >= &2 {
-            two_or_more += 1;
-        }
-    }
+    let two_or_more: Vec<&i32> = use_counts.values()
+                                           .filter(|c| c >= &&2)
+                                           .collect();
+    two_or_more.len() as i32
+}
 
-    two_or_more
+pub fn prob_3b<I>(buf: I) -> i32
+where
+    I: BufRead
+{
+    unimplemented!()
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    static INPUT: &[u8; 42] = b"#1 @ 1,3: 4x4\n#2 @ 3,1: 4x4\n#3 @ 5,5: 2x2\n";
 
     #[test]
     fn test_3a() {
-        let input = b"#1 @ 1,3: 4x4\n#2 @ 3,1: 4x4\n#3 @ 5,5: 2x2\n";
-        assert_eq!(4, prob_3a(&input[..]));
+        assert_eq!(4, prob_3a(&INPUT[..]));
+    }
+
+    #[test]
+    fn test_3b() {
+        assert_eq!(3, prob_3b(&INPUT[..]));
     }
 }
