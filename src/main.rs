@@ -3,6 +3,7 @@ use std::io::{self};
 
 mod one;
 mod two;
+mod three;
 
 
 fn main() {
@@ -15,6 +16,7 @@ fn main() {
             "1b" => println!("{}", one::prob_1b(buf)),
             "2a" => println!("{}", two::prob_2a(buf)),
             "2b" => println!("{}", two::prob_2b(buf)),
+            "3a" => println!("{}", three::prob_3a(buf)),
             _ => println!("idk that"),
         }
     }
