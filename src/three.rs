@@ -1,5 +1,5 @@
-use std::io::BufRead;
 use std::collections::HashMap;
+use std::io::BufRead;
 
 #[derive(Debug)]
 struct Claim {
@@ -45,18 +45,19 @@ impl Claim {
 }
 
 fn clean_and_parse(dirty: String, left: &str) -> i32 {
-    dirty.trim_start_matches(left)
-         .trim_start()
-         .trim_end()
-         .to_string()
-         .parse::<i32>().expect("problem parsing number")
+    dirty
+        .trim_start_matches(left)
+        .trim_start()
+        .trim_end()
+        .to_string()
+        .parse::<i32>()
+        .expect("problem parsing number")
 }
 
 pub fn prob_3a<I>(buf: I) -> i32
 where
-    I: BufRead
+    I: BufRead,
 {
-
     let mut use_counts = HashMap::new();
 
     for line in buf.lines() {
@@ -72,17 +73,48 @@ where
             }
         }
     }
-    let two_or_more: Vec<&i32> = use_counts.values()
-                                           .filter(|c| c >= &&2)
-                                           .collect();
+    let two_or_more: Vec<&i32> = use_counts.values().filter(|c| c >= &&2).collect();
     two_or_more.len() as i32
 }
 
 pub fn prob_3b<I>(buf: I) -> i32
 where
-    I: BufRead
+    I: BufRead,
 {
-    unimplemented!()
+    let mut overlaps = HashMap::<i32, Vec<i32>>::new();
+    let mut square_use = HashMap::<String, Vec<i32>>::new();
+    for line in buf.lines() {
+        let line = line.unwrap();
+        let c = Claim::from_line(line);
+
+        let mut this_claim_overlaps = Vec::<i32>::new();
+
+        for x in c.start_x..c.start_x + c.claim_x {
+            for y in c.start_y..c.start_y + c.claim_y {
+                let square_key = format!("{},{}", x, y);
+                let users = square_use.entry(square_key).or_insert(Vec::<i32>::new());
+
+                for user in users.iter() {
+                    this_claim_overlaps.push(*user);
+                    let user_overlaps = overlaps.entry(*user).or_insert(Vec::<i32>::new());
+                    user_overlaps.push(c.id);
+                }
+
+                users.push(c.id);
+            }
+        }
+
+        overlaps.insert(c.id, this_claim_overlaps);
+    }
+
+    let mut answer: i32 = -1;
+    for (k, v) in overlaps.iter() {
+        if v.len() == 0 {
+            answer = *k;
+            break;
+        }
+    }
+    answer
 }
 
 #[cfg(test)]
