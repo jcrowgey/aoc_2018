@@ -20,6 +20,7 @@ fn main() {
             "3a" => println!("{}", three::prob_3a(buf)),
             "3b" => println!("{}", three::prob_3b(buf)),
             "4a" => println!("{}", four::prob_4a(buf)),
+            "4b" => println!("{}", four::prob_4b(buf)),
             _ => println!("idk that"),
         }
     }

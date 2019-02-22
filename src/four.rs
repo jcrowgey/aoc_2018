@@ -1,8 +1,5 @@
 use std::io::BufRead;
-use std::io::ErrorKind::Other;
 use std::collections::HashMap;
-use std::iter::FilterMap;
-use std::slice::Iter;
 
 fn parse_guard(line: &String, start: usize) -> i32 {
     let start = start + 1;
@@ -36,11 +33,12 @@ where
     lines_vec
 }
 
-fn extract_guard_sleep<'a>(sorted_lines: &'a Vec<String>) -> FilterMap<Iter<'a, String>, Vec<String>>
+fn extract_guard_sleep<'a>(sorted_lines: &'a Vec<String>)
+    -> impl Iterator<Item=(i32, Vec<i32>)> + 'a
 {
     let mut cur_guard: i32 = -1; // XXX: this -1 business is nonsense
     let mut slept_from: i32 = -1; // XXX
-    sorted_lines.iter().filter_map(|line| {
+    sorted_lines.iter().filter_map(move |line| {
         if let Some(id_start) = line.find("#") {
             cur_guard = parse_guard(line, id_start);
             None
@@ -51,7 +49,7 @@ fn extract_guard_sleep<'a>(sorted_lines: &'a Vec<String>) -> FilterMap<Iter<'a, 
         }
         else if let Some(_) = line.find("wakes up") {
             let awoke = parse_minute(line);
-            let sleep_mins = Vec::<i32>::new();
+            let mut sleep_mins = Vec::<i32>::new();
             for i in slept_from..awoke {
                 sleep_mins.push(i);
             }
@@ -69,30 +67,14 @@ where
 {
 
     let lines_vec = sort_bufread(buf);
-    let mut sleep_counts = HashMap::<i32, Vec<i32>>::new();
-    let mut cur_guard: i32 = -1; // XXX: this -1 business is nonsense
-    let mut slept_from: i32 = -1; // XXX
-
-    for line in lines_vec.iter() {
-        if let Some(id_start) = line.find("#") {
-            cur_guard = parse_guard(line, id_start);
-        }
-        else if let Some(_) = line.find("falls asleep") {
-            slept_from = parse_minute(line);
-        }
-        else if let Some(_) = line.find("wakes up") {
-            let awoke = parse_minute(line);
-            let sleep_mins = sleep_counts.entry(cur_guard).or_insert(Vec::<i32>::new());
-            for i in slept_from..awoke {
-                sleep_mins.push(i);
-            }
-        }
-        else {
-            panic!("we're screwed");
-        }
+    let sleep_counts = extract_guard_sleep(&lines_vec);
+    let mut agg_counts = HashMap::<i32, Vec<i32>>::new();
+    for (guard, minutes) in sleep_counts {
+        let sleep_mins = agg_counts.entry(guard)
+                                   .or_insert(Vec::<i32>::new());
+        sleep_mins.append(&mut minutes.clone());
     }
-
-    let mut sorted_guards: Vec<_> = sleep_counts.iter().collect();
+    let mut sorted_guards: Vec<_> = agg_counts.iter().collect();
     sorted_guards.sort_by(|a, b| b.1.len().cmp(&a.1.len()));
 
     let minutes = sorted_guards[0].1.to_owned();
@@ -103,17 +85,35 @@ where
     let mut sorted_minutes: Vec<_> = minute_counts.iter().collect();
     sorted_minutes.sort_by(|a, b| b.1.cmp(a.1));
 
-    *sorted_guards[0].0 * **sorted_minutes[0].0
+    sorted_guards[0].0 * **sorted_minutes[0].0
 }
 
-/*
 pub fn prob_4b<I>(buf: I) -> i32
 where
     I: BufRead,
 {
-    unimiplemented!();
+    let lines_vec = sort_bufread(buf);
+    let guards_to_minutes = extract_guard_sleep(&lines_vec);
+    let mut agg_counts = HashMap::new();
+    for (guard, minutes) in guards_to_minutes {
+        let guard_table = agg_counts.entry(guard.clone())
+                                    .or_insert(HashMap::<i32, i32>::new());
+        for m in minutes.iter() {
+            *guard_table.entry(m.clone()).or_insert(0) += 1;
+        }
+    }
+
+    let mut top_minute = (-1, -1, -1);  // count, minute, guard;
+    for (guard, guard_table) in agg_counts {
+        let mut sorted_minutes: Vec<_> = guard_table.iter().collect();
+        sorted_minutes.sort_by(|a, b| b.1.cmp(a.1));
+        if sorted_minutes[0].1 > &top_minute.0 {
+            top_minute = (*sorted_minutes[0].1, *sorted_minutes[0].0, guard);
+        }
+    }
+
+    top_minute.1 * top_minute.2
 }
-*/
 
 #[cfg(test)]
 mod tests {
@@ -144,7 +144,6 @@ mod tests {
 
     #[test]
     fn test_4b() {
-        assert_eq!(4455, prob_4a(&INPUT[..]));
+        assert_eq!(4455, prob_4b(&INPUT[..]));
     }
-
 }
