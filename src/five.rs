@@ -20,7 +20,7 @@ fn react_polymer(inp: &Vec<u8>) -> Vec<i8> {
     out
 }
 
-pub fn prob_5b<I>(mut buf: I) -> usize
+pub fn five_b<I>(mut buf: I) -> usize
 where
     I: BufRead
 {
@@ -42,7 +42,7 @@ where
     shortest
 }
 
-pub fn prob_5a<I>(mut buf: I) -> usize
+pub fn five_a<I>(mut buf: I) -> usize
 where
     I: BufRead
 {
@@ -60,14 +60,14 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_5a() {
+    fn test_five_a() {
         let input = b"dabAcCaCBAcCcaDA\n";
-        assert_eq!(10, prob_5a(&input[..]));
+        assert_eq!(10, five_a(&input[..]));
     }
 
     #[test]
-    fn test_5b() {
+    fn test_five_b() {
         let input = b"dabAcCaCBAcCcaDA\n";
-        assert_eq!(4, prob_5b(&input[..]));
+        assert_eq!(4, five_b(&input[..]));
     }
 }

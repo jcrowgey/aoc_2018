@@ -1,7 +1,7 @@
 use std::io::BufRead;
 use std::collections::HashMap;
 
-pub fn prob_2a<I>(buf: I) -> i32
+pub fn two_a<I>(buf: I) -> i32
 where
     I: BufRead
 {
@@ -41,7 +41,7 @@ where
     two_count * three_count
 }
 
-pub fn prob_2b<I>(buf: I) -> String
+pub fn two_b<I>(buf: I) -> String
 where
     I: BufRead
 {
@@ -71,14 +71,14 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_2a() {
+    fn test_two_a() {
         let input = b"abcdef\nbababc\nabbcde\nabcccd\naabcdd\nabcdee\nababab\n";
-        assert_eq!(12, prob_2a(&input[..]));
+        assert_eq!(12, two_a(&input[..]));
     }
 
     #[test]
-    fn test_2b() {
+    fn test_two_b() {
         let input = b"abcde\nfghij\nklmno\npqrst\nfguij\naxcye\nwvxyz\n";
-        assert_eq!("fgij".to_string(), prob_2b(&input[..]));
+        assert_eq!("fgij".to_string(), two_b(&input[..]));
     }
 }

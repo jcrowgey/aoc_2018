@@ -61,7 +61,7 @@ fn extract_guard_sleep<'a>(sorted_lines: &'a Vec<String>)
     })
 }
 
-pub fn prob_4a<I>(buf: I) -> i32
+pub fn four_a<I>(buf: I) -> i32
 where
     I: BufRead,
 {
@@ -88,7 +88,7 @@ where
     sorted_guards[0].0 * **sorted_minutes[0].0
 }
 
-pub fn prob_4b<I>(buf: I) -> i32
+pub fn four_b<I>(buf: I) -> i32
 where
     I: BufRead,
 {
@@ -138,12 +138,12 @@ mod tests {
 [1518-11-05 00:55] wakes up";
 
     #[test]
-    fn test_4a() {
-        assert_eq!(240, prob_4a(&INPUT[..]));
+    fn test_four_a() {
+        assert_eq!(240, four_a(&INPUT[..]));
     }
 
     #[test]
-    fn test_4b() {
-        assert_eq!(4455, prob_4b(&INPUT[..]));
+    fn test_four_b() {
+        assert_eq!(4455, four_b(&INPUT[..]));
     }
 }

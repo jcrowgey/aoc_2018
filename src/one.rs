@@ -14,7 +14,7 @@ fn prob1_adder(mut freq: i32, mut line: String) -> i32 {
 }
 
 
-pub fn prob_1a<I>(buf: I) -> i32
+pub fn one_a<I>(buf: I) -> i32
 where
     I: BufRead
 {
@@ -27,7 +27,7 @@ where
 }
 
 
-pub fn prob_1b<I>(buf: I) -> i32
+pub fn one_b<I>(buf: I) -> i32
 where
     I: BufRead
 {
@@ -66,26 +66,26 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_1a() {
+    fn test_one_a() {
         let input = b"+1\n-2\n+3\n+1\n";
-        assert_eq!(3, prob_1a(&input[..]));
+        assert_eq!(3, one_a(&input[..]));
     }
 
     #[test]
-    fn test_1b() {
+    fn test_one_b() {
         let input = b"+1\n-2\n+3\n+1\n";
-        assert_eq!(2, prob_1b(&input[..]));
+        assert_eq!(2, one_b(&input[..]));
 
         let input = b"+1\n-1\n";
-        assert_eq!(0, prob_1b(&input[..]));
+        assert_eq!(0, one_b(&input[..]));
 
         let input = b"+3\n+3\n+4\n-2\n-4\n";
-        assert_eq!(10, prob_1b(&input[..]));
+        assert_eq!(10, one_b(&input[..]));
 
         let input = b"-6\n+3\n+8\n+5\n-6\n";
-        assert_eq!(5, prob_1b(&input[..]));
+        assert_eq!(5, one_b(&input[..]));
 
         let input = b"+7\n+7\n-2\n-7\n-4\n";
-        assert_eq!(14, prob_1b(&input[..]));
+        assert_eq!(14, one_b(&input[..]));
     }
 }

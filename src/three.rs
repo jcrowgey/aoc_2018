@@ -54,7 +54,7 @@ fn clean_and_parse(dirty: String, left: &str) -> i32 {
         .expect("problem parsing number")
 }
 
-pub fn prob_3a<I>(buf: I) -> i32
+pub fn three_a<I>(buf: I) -> i32
 where
     I: BufRead,
 {
@@ -77,7 +77,7 @@ where
     two_or_more.len() as i32
 }
 
-pub fn prob_3b<I>(buf: I) -> i32
+pub fn three_b<I>(buf: I) -> i32
 where
     I: BufRead,
 {
@@ -123,12 +123,12 @@ mod tests {
     static INPUT: &[u8; 42] = b"#1 @ 1,3: 4x4\n#2 @ 3,1: 4x4\n#3 @ 5,5: 2x2\n";
 
     #[test]
-    fn test_3a() {
-        assert_eq!(4, prob_3a(&INPUT[..]));
+    fn test_three_a() {
+        assert_eq!(4, three_a(&INPUT[..]));
     }
 
     #[test]
-    fn test_3b() {
-        assert_eq!(3, prob_3b(&INPUT[..]));
+    fn test_three_b() {
+        assert_eq!(3, three_b(&INPUT[..]));
     }
 }
