@@ -6,6 +6,7 @@ mod two;
 mod three;
 mod four;
 mod five;
+mod six;
 
 
 fn main() {
@@ -24,6 +25,8 @@ fn main() {
             "4b" => println!("{}", four::four_b(buf)),
             "5a" => println!("{}", five::five_a(buf)),
             "5b" => println!("{}", five::five_b(buf)),
+            "6a" => println!("{}", six::six_a(buf)),
+            "6b" => println!("{}", six::six_b(buf, 10000)),
             _ => println!("idk that"),
         }
     }
