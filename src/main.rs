@@ -1,14 +1,13 @@
 use std::env::args;
-use std::io::{self};
+use std::io;
 
-mod one;
-mod two;
-mod three;
-mod four;
 mod five;
-mod six;
+mod four;
+mod one;
 mod seven;
-
+mod six;
+mod three;
+mod two;
 
 fn main() {
     let args: Vec<_> = args().collect();

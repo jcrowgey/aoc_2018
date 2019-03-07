@@ -1,23 +1,24 @@
-use std::io::BufRead;
 use std::collections::{HashMap, HashSet};
+use std::io::BufRead;
 
-fn taxi_distance(x1: i32, y1: i32, x2: i32, y2:i32) -> i32 {
+fn taxi_distance(x1: i32, y1: i32, x2: i32, y2: i32) -> i32 {
     (x1 - x2).abs() + (y1 - y2).abs()
 }
-
 
 fn parse_point(mut line: String) -> (i32, i32) {
     let x: String = line.drain(..line.find(",").unwrap()).collect();
     let x = x.parse::<i32>().expect("problem parsing x");
-    let y = line.trim_start_matches(", ")
-                .trim_end()
-                .parse::<i32>().expect("problem parsing y");
+    let y = line
+        .trim_start_matches(", ")
+        .trim_end()
+        .parse::<i32>()
+        .expect("problem parsing y");
     (x, y)
 }
 
 fn find_closest<'a, I>(x: i32, y: i32, points: I) -> Option<(i32, i32)>
 where
-    I: Iterator<Item=&'a (i32, i32)>
+    I: Iterator<Item = &'a (i32, i32)>,
 {
     let mut closest_point: (i32, i32) = (-1, -1);
     let mut best_distance: i32 = 0x7fffffff;
@@ -27,8 +28,7 @@ where
         let d = taxi_distance(x, y, *px, *py);
         if d == best_distance {
             tie = true;
-        }
-        else if d < best_distance {
+        } else if d < best_distance {
             best_distance = d;
             closest_point = (*px, *py);
             tie = false;
@@ -52,8 +52,8 @@ struct SpaceMap {
 
 impl SpaceMap {
     fn new<I>(buf: I) -> SpaceMap
-    where I:
-        BufRead
+    where
+        I: BufRead,
     {
         let mut max_x: i32 = 0;
         let mut max_y: i32 = 0;
@@ -107,7 +107,7 @@ impl SpaceMap {
  */
 pub fn six_a<I>(buf: I) -> i32
 where
-    I: BufRead
+    I: BufRead,
 {
     let mut space = SpaceMap::new(buf);
 
@@ -138,12 +138,12 @@ where
     }
 
     // add up the score for all points
-    for x in space.min_x .. space.max_x {
-        for y in space.min_y .. space.max_y {
+    for x in space.min_x..space.max_x {
+        for y in space.min_y..space.max_y {
             match find_closest(x, y, space.points.keys()) {
                 Some(cp) => {
                     *space.points.entry(cp).or_insert(0) += 1;
-                },
+                }
                 None => (),
             };
         }
@@ -156,19 +156,19 @@ where
     *space.points.values().max().unwrap()
 }
 
-
 pub fn six_b<I>(buf: I, threshold: i32) -> usize
 where
-    I: BufRead
+    I: BufRead,
 {
-
     let space = SpaceMap::new(buf);
     let mut size = 0;
 
-    for x in space.min_x .. space.max_x {
-        for y in space.min_y .. space.max_y {
-            let sum = space.points.keys()
-                                  .fold(0, |acc, (px, py)| acc + taxi_distance(x, y, *px, *py));
+    for x in space.min_x..space.max_x {
+        for y in space.min_y..space.max_y {
+            let sum = space
+                .points
+                .keys()
+                .fold(0, |acc, (px, py)| acc + taxi_distance(x, y, *px, *py));
             if sum < threshold {
                 size += 1;
             }

@@ -1,6 +1,5 @@
-use std::io::BufRead;
 use std::collections::HashMap;
-
+use std::io::BufRead;
 
 fn prob1_adder(mut freq: i32, mut line: String) -> i32 {
     let sign_str: String = line.drain(..1).collect();
@@ -13,10 +12,9 @@ fn prob1_adder(mut freq: i32, mut line: String) -> i32 {
     freq
 }
 
-
 pub fn one_a<I>(buf: I) -> i32
 where
-    I: BufRead
+    I: BufRead,
 {
     let mut freq: i32 = 0;
     for line in buf.lines() {
@@ -26,10 +24,9 @@ where
     freq
 }
 
-
 pub fn one_b<I>(buf: I) -> i32
 where
-    I: BufRead
+    I: BufRead,
 {
     let mut seen_freqs = HashMap::new();
     let mut freq: i32 = 0;
@@ -44,7 +41,7 @@ where
         freq = prob1_adder(freq, line);
 
         if seen_freqs.contains_key(&freq) {
-            return freq
+            return freq;
         }
         seen_freqs.insert(freq, true);
     }
@@ -53,13 +50,12 @@ where
         for line in replay_lines.iter() {
             freq = prob1_adder(freq, line.to_string());
             if seen_freqs.contains_key(&freq) {
-                return freq
+                return freq;
             }
             seen_freqs.insert(freq, true);
         }
     }
 }
-
 
 #[cfg(test)]
 mod tests {

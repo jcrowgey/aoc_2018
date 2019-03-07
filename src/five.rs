@@ -10,10 +10,9 @@ fn react_polymer(inp: &Vec<u8>) -> Vec<i8> {
     for ubyte in inp.iter() {
         let byte: i8 = *ubyte as i8;
         let out_len = out.len();
-        if out_len > 0 && char_eq(out[out_len-1], byte) {
+        if out_len > 0 && char_eq(out[out_len - 1], byte) {
             out.pop();
-        }
-        else {
+        } else {
             out.push(byte);
         }
     }
@@ -22,18 +21,20 @@ fn react_polymer(inp: &Vec<u8>) -> Vec<i8> {
 
 pub fn five_b<I>(mut buf: I) -> usize
 where
-    I: BufRead
+    I: BufRead,
 {
     let mut inp = Vec::<u8>::new();
     let _res = buf.read_until(10u8, &mut inp);
     assert_eq!(inp.pop(), Some(10u8));
 
     let mut shortest = u32::MAX as usize;
-    for val in 65i8..90i8 { // A .. Z
-        let f = inp.iter()
-                   .filter(|&&b| {!(char_eq(val, b as i8) ||
-                                            val == (b as i8))})
-                   .map(|&b| b).collect();
+    for val in 65i8..90i8 {
+        // A .. Z
+        let f = inp
+            .iter()
+            .filter(|&&b| !(char_eq(val, b as i8) || val == (b as i8)))
+            .map(|&b| b)
+            .collect();
         let reacted = react_polymer(&f);
         if reacted.len() < shortest {
             shortest = reacted.len()
@@ -44,7 +45,7 @@ where
 
 pub fn five_a<I>(mut buf: I) -> usize
 where
-    I: BufRead
+    I: BufRead,
 {
     let mut inp = Vec::<u8>::new();
     let _res = buf.read_until(10u8, &mut inp);

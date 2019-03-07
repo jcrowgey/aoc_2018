@@ -1,24 +1,27 @@
-use std::io::BufRead;
 use std::collections::HashMap;
+use std::io::BufRead;
 
 fn parse_guard(line: &String, start: usize) -> i32 {
     let start = start + 1;
     let mut end = start;
-    for (i, c) in line[start + 1 ..].chars().enumerate() {
+    for (i, c) in line[start + 1..].chars().enumerate() {
         if !c.is_digit(10) {
             end = start + i + 1;
             break;
         }
     }
-    line[start..end].to_string().parse::<i32>()
-                                .expect("problem parsing guard number")
+    line[start..end]
+        .to_string()
+        .parse::<i32>()
+        .expect("problem parsing guard number")
 }
 
 fn parse_minute(line: &String) -> i32 {
     let left_bracket = line.find("]").unwrap();
-    line[left_bracket-2 .. left_bracket].to_string()
-                                        .parse::<i32>()
-                                        .expect("problem parsing minute")
+    line[left_bracket - 2..left_bracket]
+        .to_string()
+        .parse::<i32>()
+        .expect("problem parsing minute")
 }
 
 fn sort_bufread<I>(buf: I) -> Vec<String>
@@ -33,29 +36,26 @@ where
     lines_vec
 }
 
-fn extract_guard_sleep<'a>(sorted_lines: &'a Vec<String>)
-    -> impl Iterator<Item=(i32, Vec<i32>)> + 'a
-{
+fn extract_guard_sleep<'a>(
+    sorted_lines: &'a Vec<String>,
+) -> impl Iterator<Item = (i32, Vec<i32>)> + 'a {
     let mut cur_guard: i32 = -1; // XXX: this -1 business is nonsense
     let mut slept_from: i32 = -1; // XXX
     sorted_lines.iter().filter_map(move |line| {
         if let Some(id_start) = line.find("#") {
             cur_guard = parse_guard(line, id_start);
             None
-        }
-        else if let Some(_) = line.find("falls asleep") {
+        } else if let Some(_) = line.find("falls asleep") {
             slept_from = parse_minute(line);
             None
-        }
-        else if let Some(_) = line.find("wakes up") {
+        } else if let Some(_) = line.find("wakes up") {
             let awoke = parse_minute(line);
             let mut sleep_mins = Vec::<i32>::new();
             for i in slept_from..awoke {
                 sleep_mins.push(i);
             }
             Some((cur_guard, sleep_mins))
-        }
-        else {
+        } else {
             panic!("we're screwed");
         }
     })
@@ -65,13 +65,11 @@ pub fn four_a<I>(buf: I) -> i32
 where
     I: BufRead,
 {
-
     let lines_vec = sort_bufread(buf);
     let sleep_counts = extract_guard_sleep(&lines_vec);
     let mut agg_counts = HashMap::<i32, Vec<i32>>::new();
     for (guard, minutes) in sleep_counts {
-        let sleep_mins = agg_counts.entry(guard)
-                                   .or_insert(Vec::<i32>::new());
+        let sleep_mins = agg_counts.entry(guard).or_insert(Vec::<i32>::new());
         sleep_mins.append(&mut minutes.clone());
     }
     let mut sorted_guards: Vec<_> = agg_counts.iter().collect();
@@ -96,14 +94,15 @@ where
     let guards_to_minutes = extract_guard_sleep(&lines_vec);
     let mut agg_counts = HashMap::new();
     for (guard, minutes) in guards_to_minutes {
-        let guard_table = agg_counts.entry(guard.clone())
-                                    .or_insert(HashMap::<i32, i32>::new());
+        let guard_table = agg_counts
+            .entry(guard.clone())
+            .or_insert(HashMap::<i32, i32>::new());
         for m in minutes.iter() {
             *guard_table.entry(m.clone()).or_insert(0) += 1;
         }
     }
 
-    let mut top_minute = (-1, -1, -1);  // count, minute, guard;
+    let mut top_minute = (-1, -1, -1); // count, minute, guard;
     for (guard, guard_table) in agg_counts {
         let mut sorted_minutes: Vec<_> = guard_table.iter().collect();
         sorted_minutes.sort_by(|a, b| b.1.cmp(a.1));

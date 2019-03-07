@@ -1,5 +1,5 @@
-use std::io::BufRead;
 use std::collections::HashSet;
+use std::io::BufRead;
 use std::iter::FromIterator;
 
 fn get_next_ready(sorted_tasks: &Vec<&u8>, deps: &HashSet<(u8, u8)>) -> Option<u8> {
@@ -9,12 +9,12 @@ fn get_next_ready(sorted_tasks: &Vec<&u8>, deps: &HashSet<(u8, u8)>) -> Option<u
         for (_before, then) in deps.iter() {
             if *t == then {
                 ready = false;
-                break
+                break;
             }
         }
 
         if ready {
-            return Some(**t)
+            return Some(**t);
         }
     }
     None
@@ -22,9 +22,8 @@ fn get_next_ready(sorted_tasks: &Vec<&u8>, deps: &HashSet<(u8, u8)>) -> Option<u
 
 pub fn seven_a<I>(buf: I) -> String
 where
-    I: BufRead
+    I: BufRead,
 {
-
     let mut all_tasks = HashSet::new();
     let mut deps = HashSet::new();
     for line in buf.lines() {
@@ -48,10 +47,11 @@ where
         // remove from the tasks remaining
         sorted_tasks.retain(|t| **t != next_task);
 
-        deps = deps.iter()
-                   .cloned()
-                   .filter(|(before, _then)| next_task != *before)
-                   .collect();
+        deps = deps
+            .iter()
+            .cloned()
+            .filter(|(before, _then)| next_task != *before)
+            .collect();
 
         if sorted_tasks.len() == 0 {
             break;
@@ -65,7 +65,7 @@ where
 mod tests {
     use super::*;
 
-    static INPUT: &[u8; 49*7] = b"Step C must be finished before step A can begin.
+    static INPUT: &[u8; 49 * 7] = b"Step C must be finished before step A can begin.
 Step C must be finished before step F can begin.
 Step A must be finished before step B can begin.
 Step A must be finished before step D can begin.

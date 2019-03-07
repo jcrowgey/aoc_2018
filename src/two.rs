@@ -1,9 +1,9 @@
-use std::io::BufRead;
 use std::collections::HashMap;
+use std::io::BufRead;
 
 pub fn two_a<I>(buf: I) -> i32
 where
-    I: BufRead
+    I: BufRead,
 {
     let mut two_count = 0;
     let mut three_count = 0;
@@ -15,7 +15,6 @@ where
                 None => char_counts.insert(chr, 1),
             };
         }
-
 
         let mut two_flag = false;
         let mut three_flag = false;
@@ -43,28 +42,24 @@ where
 
 pub fn two_b<I>(buf: I) -> String
 where
-    I: BufRead
+    I: BufRead,
 {
-
     let mut ids = Vec::<String>::new();
     let mut answer = String::from("i give up");
     'outer: for x in buf.lines() {
         let x = x.unwrap();
         for y in ids.iter() {
-            let sames: Vec<(char, char)> = x.chars()
-                                            .zip(y.chars())
-                                            .filter(|p| p.0 == p.1)
-                                            .collect();
+            let sames: Vec<(char, char)> =
+                x.chars().zip(y.chars()).filter(|p| p.0 == p.1).collect();
             if sames.len() == (x.len() - 1) {
                 answer = sames.iter().map(|x| x.0).collect();
-                break 'outer
+                break 'outer;
             }
         }
         ids.push(x.clone());
     }
     answer
 }
-
 
 #[cfg(test)]
 mod tests {
