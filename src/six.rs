@@ -203,7 +203,7 @@ mod tests {
 
     #[test]
     fn test_parse_point() {
-        let mut str_pair = "11, 99\n".to_string();
+        let str_pair = "11, 99\n".to_string();
         assert_eq!((11i32, 99i32), parse_point(str_pair));
     }
 }
