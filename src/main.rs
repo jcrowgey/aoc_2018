@@ -28,6 +28,7 @@ fn main() {
             "6a" => println!("{}", six::six_a(buf)),
             "6b" => println!("{}", six::six_b(buf, 10000)),
             "7a" => println!("{}", seven::seven_a(buf)),
+            "7b" => println!("{}", seven::seven_b(buf, 5, 60)),
             _ => println!("idk that"),
         }
     }
