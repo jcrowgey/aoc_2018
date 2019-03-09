@@ -31,6 +31,7 @@ fn main() {
             "7a" => println!("{}", seven::seven_a(buf)),
             "7b" => println!("{}", seven::seven_b(buf, 5, 60)),
             "8a" => println!("{}", eight::eight_a(buf)),
+            "8b" => println!("{}", eight::eight_b(buf)),
             _ => println!("idk that"),
         }
     }
