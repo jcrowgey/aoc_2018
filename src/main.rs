@@ -1,13 +1,14 @@
 use std::env::args;
 use std::io;
 
-mod five;
-mod four;
 mod one;
-mod seven;
-mod six;
-mod three;
 mod two;
+mod three;
+mod four;
+mod five;
+mod six;
+mod seven;
+mod eight;
 
 fn main() {
     let args: Vec<_> = args().collect();
@@ -29,6 +30,7 @@ fn main() {
             "6b" => println!("{}", six::six_b(buf, 10000)),
             "7a" => println!("{}", seven::seven_a(buf)),
             "7b" => println!("{}", seven::seven_b(buf, 5, 60)),
+            "8a" => println!("{}", eight::eight_a(buf)),
             _ => println!("idk that"),
         }
     }
