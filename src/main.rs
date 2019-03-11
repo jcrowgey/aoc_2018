@@ -9,6 +9,7 @@ mod five;
 mod six;
 mod seven;
 mod eight;
+mod nine;
 
 fn main() {
     let args: Vec<_> = args().collect();
@@ -32,6 +33,8 @@ fn main() {
             "7b" => println!("{}", seven::seven_b(buf, 5, 60)),
             "8a" => println!("{}", eight::eight_a(buf)),
             "8b" => println!("{}", eight::eight_b(buf)),
+            "9a" => println!("{}", nine::nine_a(buf)),
+            "9b" => println!("{}", nine::nine_b(buf)),
             _ => println!("idk that"),
         }
     }
