@@ -31,6 +31,7 @@ where
 }
 
 fn get_high_score(player_cnt: i32, max_turns: i32) -> i32 {
+    // let mut board = Vec::with_capacity(max_turns as usize);
     let mut board = Vec::new();
     let mut player_scores = vec![0i32; player_cnt as usize];
     let mut last_index: usize = 0;
