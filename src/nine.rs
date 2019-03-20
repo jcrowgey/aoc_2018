@@ -44,17 +44,13 @@ fn walk_to(list: &mut List<i32>, new_index: i32, mut current_index: i32) -> i32 
     current_index
 }
 
-fn get_high_scoref(player_cnt: i32, max_turns: i32) -> i32 {
-    // let mut board = Vec::with_capacity(max_turns as usize);
-    println!("--");
+fn get_high_score_l(player_cnt: i32, max_turns: i32) -> i64 {
     let mut board = List::new();
     let mut board_len = 0;
-    let mut player_scores = vec![0i32; player_cnt as usize];
+    let mut player_scores = vec![0i64; player_cnt as usize];
     let mut last_index: i32 = 1;
 
     for i in 0..max_turns + 1 {
-        // println!("curr_index: {}", last_index);
-        println!("{}", board);
         if i == 0 || i == 1 {
             board.push_left(i);
             board_len += 1;
@@ -62,27 +58,33 @@ fn get_high_scoref(player_cnt: i32, max_turns: i32) -> i32 {
         } else {
             if i % 23 == 0 {
                 let player = (i % player_cnt) as usize;
-                player_scores[player] += i;
+                player_scores[player] += i as i64;
 
-                let remove_idx =
-                    modulus(last_index as i32 - ELFLY_CONSTANT, board_len as i32);
+                let mut remove_idx =
+                    modulus(last_index - ELFLY_CONSTANT, board_len);
 
-                // println!("walking to: {}", remove_idx);
+                if remove_idx == 0 {
+                    // swing around to the right side because we're going to pop left below
+                    remove_idx = board_len;
+                }
+
                 last_index = walk_to(&mut board, remove_idx, last_index);
-                let popped = board.pop_left().unwrap();
-                last_index = walk_to(&mut board, last_index + 1, last_index);
-
-                println!("{} <- popped", popped);
+                player_scores[player] += board.pop_left().unwrap() as i64;
                 board_len -= 1;
-                player_scores[player] += popped;
+
+                if last_index == (1 + board_len) { // we need to swing back again to walk right
+                    last_index -= 1; // we're actually off by 1 since we popped the left stack
+                    last_index = walk_to(&mut board, 1, last_index);
+                } else {
+                    board.go_right();  // the easy way to get back on track;
+                }
             } else {
                 // last index is already pointing to the right of the last insertion point
                 let new_index = modulus(last_index + 1, board_len);
-                // println!("walking to: {}", new_index);
                 last_index = walk_to(&mut board, new_index, last_index);
                 board.push_left(i);
-                last_index += 1;
                 board_len += 1;
+                last_index += 1;
             }
         }
     }
@@ -91,7 +93,6 @@ fn get_high_scoref(player_cnt: i32, max_turns: i32) -> i32 {
 }
 
 fn get_high_score(player_cnt: i32, max_turns: i32) -> i32 {
-    // let mut board = Vec::with_capacity(max_turns as usize);
     let mut board = Vec::new();
     let mut player_scores = vec![0i32; player_cnt as usize];
     let mut last_index: usize = 0;
@@ -124,15 +125,15 @@ where
 {
     let (player_cnt, max_turns) = param_extraction(buf);
     // println!("{}, {}", player_cnt, max_turns);
-    get_high_scoref(player_cnt, max_turns)
+    get_high_score(player_cnt, max_turns)
 }
 
-pub fn nine_b<I>(buf: I) -> i32
+pub fn nine_b<I>(buf: I) -> i64
 where
     I: BufRead,
 {
     let (player_cnt, max_turns) = param_extraction(buf);
-    get_high_score(player_cnt, max_turns * 100)
+    get_high_score_l(player_cnt, max_turns * 100)
 }
 
 #[cfg(test)]

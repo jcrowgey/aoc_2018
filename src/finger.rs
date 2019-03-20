@@ -11,6 +11,7 @@ pub struct List<T> {
     right: Stack<T>,
 }
 
+#[allow(dead_code)]
 impl<T> List<T> {
     pub fn new() -> Self {
         List { left: Stack::new(), right: Stack::new() }
