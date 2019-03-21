@@ -1,8 +1,6 @@
 use std::env::args;
 use std::io;
 
-mod finger;
-
 mod one;
 mod two;
 mod three;
