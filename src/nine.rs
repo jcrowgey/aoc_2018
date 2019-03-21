@@ -86,7 +86,7 @@ mod tests {
     ];
 
      #[test]
-     fn test_nine_a() {
+     fn test_nine() {
          for (input, expected) in INPUTS.iter() {
              assert_eq!(*expected, nine_a(&input[..]));
          }
